@@ -302,9 +302,9 @@ void PlayMode::update(float elapsed) {
 		//-4.0 is the left boundary for the road
 		windShield->position.x = std::max(-4.0f, windShield->position.x - glm::sin(carAddedRot) * velocity);
 		//no going back
-		deltaY = std::max(backWall, glm::cos(carAddedRot) * velocity);
+		deltaY = glm::cos(carAddedRot) * velocity;
 		curY += deltaY;
-		windShield->position.y += deltaY;
+		windShield->position.y = std::max(backWall, windShield->position.y + glm::cos(carAddedRot) * velocity);
 	}
 
 	glm::mat4x3 frame = camera->transform->make_parent_from_local();
