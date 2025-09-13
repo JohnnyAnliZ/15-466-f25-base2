@@ -87,20 +87,21 @@ PlayMode::PlayMode() : scene(*road_scene) {
 	
 	std::cout << windShield->position.x << std::endl;
 
-	steeringWheel->position = glm::vec3(-0.440105f, -0.277918f, -0.129515f);
+	steeringWheel->position = glm::vec3(-0.440105f, -0.130878f, -0.277279f);
 	steeringWheel->scale = glm::vec3(0.246365f, 0.24396f, 0.333387f);
-	steeringWheel->rotation = glm::quat(0.902628f, 0.430421f, 0.0f, 0.0f);
+	steeringWheel->rotation = glm::quat(0.702559f, 0.702559f, 0.0f, 0.0f);
 	steeringWheel->parent = windShield;
 
 	carBaseRot = windShield->rotation;
 
+	steeringWheelBaseRot = steeringWheel->rotation;
 
 	camera->transform->rotation = glm::quat(0.7069f,0.7072f,0.0f,0.0f);
 	
 
 	//try to parent camera to the windShield
-	camera->transform->position = glm::vec3(-0.08587f, -2.16435f, 1.77435f);
-	camera->transform->rotation = glm::quat(0.905369f, 0.424626f, 0.0f, 0.0f);
+	camera->transform->position = glm::vec3(-0.08587f, -2.79863f, -0.01958f);
+	camera->transform->rotation = glm::quat(0.707107f, 0.707107f, 0.0f, 0.0f);
 	camera->transform->scale = glm::vec3(0.85884f, 0.85884f, 0.85884f);
 	camera->transform->parent = windShield;
 
@@ -166,7 +167,7 @@ bool PlayMode::handle_event(SDL_Event const& evt, glm::uvec2 const& window_size)
 			mouseRot += motion;
 			camera->transform->rotation = glm::normalize(
 				glm::quat(0.7069f, 0.7072f, 0.0f, 0.0f)
-				* glm::angleAxis(-mouseRot.x * camera->fovy, glm::vec3(0.0f, 0.8f, -0.79f))
+				* glm::angleAxis(-mouseRot.x * camera->fovy, glm::vec3(0.0f, 1.0f, 0.0f))
 				* glm::angleAxis(mouseRot.y * camera->fovy, glm::vec3(1.0f, 0.0f, 0.0f))
 			);
 			return true;
@@ -267,18 +268,18 @@ void PlayMode::update(float elapsed) {
 	//car turning
 	if (turnTime > 0.03 && (velocity <-0.02 || velocity >0.02)) {
 		if (left.pressed && !right.pressed) {	
-			steeringWheel->rotation = glm::normalize(carBaseRot * glm::angleAxis(carAddedRot*5, glm::vec3(0.0f, 0.0f, 1.0f)));
+			steeringWheel->rotation = glm::normalize(steeringWheelBaseRot * glm::angleAxis(carAddedRot*5, glm::vec3(0.0f, 0.0f, 1.0f)));
 			if(myGear == D)carAddedRot += glm::radians(1 - velocity/ 7);
 			else carAddedRot -= glm::radians(1 - velocity / 7);
 		}
 		if (right.pressed && !left.pressed) {
-			steeringWheel->rotation = glm::normalize(carBaseRot * glm::angleAxis(carAddedRot*5, glm::vec3(0.0f, 0.0f, 1.0f)));
+			steeringWheel->rotation = glm::normalize(steeringWheelBaseRot * glm::angleAxis(carAddedRot*5, glm::vec3(0.0f, 0.0f, 1.0f)));
 			if (myGear == D)carAddedRot -= glm::radians(1 - velocity/ 7);
 			else carAddedRot += glm::radians(1 - velocity / 7);
 		}
 		turnTime = 0;
 	}
-	windShield->rotation = glm::normalize(carBaseRot * glm::angleAxis(carAddedRot, glm::vec3(0.0f, 0.75f, 1.0f)));
+	windShield->rotation = glm::normalize(carBaseRot * glm::angleAxis(carAddedRot, glm::vec3(0.0f, 0.00f, 1.0f)));
 
 	//when there's no gas or break
 	if (!(down.pressed ^ up.pressed)) {

@@ -53,6 +53,7 @@ struct PlayMode : Mode {
 	float velocity = 0.0f;
 
 	glm::quat carBaseRot;
+	glm::quat steeringWheelBaseRot;
 	//rotation of the car in radians about the z axis
 	float carAddedRot = 0.0f;
 	glm::vec2 move = glm::vec2(0, 0);
